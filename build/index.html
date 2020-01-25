@@ -1,0 +1,71 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root">
+        <div class="App wrapper">
+            <div>
+                <div class="center">
+                    <div class="player">
+                        <div class="info"><img src="https://partyspace.com/images/blog_entries/no-music.png"
+                                alt="album artwork" id="album_art" class="icon">
+                            <div class="track-info">
+                                <div class="title" id="title">No Songs Currently Playing</div>
+                                <div class="author" id="author"></div>
+                            </div>
+                        </div>
+                        <div class="controls">
+                            <div class="time-current" id="time_current">0</div>
+                            <div class="bar">
+                                <div class="progress" id="progress_bar" style="width: 0%;"></div>
+                            </div>
+                            <div class="time-left" id="length">0</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function loadDoc() {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.responseText.length >1) {
+                    var obj = JSON.parse(this.responseText, function (key, value) {
+                        return value;
+                    });
+                    if (document.getElementById("title").innerHTML != obj.name) {
+                        document.getElementById("title").innerHTML = obj.name;
+                    };
+                    if (document.getElementById("album_art").src != obj.art) {
+                        document.getElementById("album_art").src = obj.art;
+                    };
+                    if (document.getElementById("author").innerHTML != obj.artists) {
+                        document.getElementById("author").innerHTML = obj.artists;
+                    };
+                    if (document.getElementById("time_current").innerHTML != obj.current_position) {
+                        document.getElementById("time_current").innerHTML = obj.current_position;
+                    };
+                    if (document.getElementById("length").innerHTML != obj.length) {
+                        document.getElementById("length").innerHTML = obj.length;
+                    };
+                    if (document.getElementById("progress_bar").style != "width: " + obj.bar_state + ";") {
+                        document.getElementById("progress_bar").style = "width: " + obj.bar_state + ";";
+                    }
+                }
+            };
+            xhttp.open("GET", "http://localhost:5000/spotify", true);
+            xhttp.send();
+        }
+        window.setInterval(function () {
+            loadDoc();
+        }, 5000);
+    </script>
+
+</body>
+
+</html>
